@@ -8,17 +8,18 @@ export default function Login() {
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await API.post("/auth/login", form);
+    localStorage.setItem("token", res.data.token);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await API.post("/auth/login", form);
-      localStorage.setItem("token", res.data.token);
-      navigate("/");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
-    }
-  };
+    // ✅ HashRouter-safe redirect
+    window.location.href = "/#/dashboard";
+  } catch (err) {
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">

@@ -13,7 +13,8 @@ export default function Register() {
     e.preventDefault();
     try {
       await API.post("/auth/register", form);
-      navigate("/login");
+      window.location.href = "/#/login";
+
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
     }

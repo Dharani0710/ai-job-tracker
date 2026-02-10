@@ -8,18 +8,23 @@ export default function Login() {
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await API.post("/auth/login", form);
-    localStorage.setItem("token", res.data.token);
 
-    // ✅ FORCE redirect (HashRouter safe)
-    window.location.replace("/#/dashboard");
-  } catch (err) {
-    alert(err.response?.data?.message || "Login failed");
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/auth/login", form);
+
+      // ✅ SAVE TOKEN (THIS WAS MISSING / WRONG)
+      localStorage.setItem("token", res.data.token);
+
+      console.log("TOKEN SAVED:", res.data.token);
+
+      // ✅ HashRouter-safe navigation
+      navigate("/dashboard");
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -37,6 +42,7 @@ const handleSubmit = async (e) => {
           onChange={handleChange}
           required
         />
+
         <input
           name="password"
           type="password"
@@ -46,13 +52,13 @@ const handleSubmit = async (e) => {
           required
         />
 
-        <button className="w-full bg-blue-600 text-white p-2 rounded">
+        <button className="w-full bg-indigo-600 text-white p-2 rounded">
           Login
         </button>
 
         <p className="text-center mt-3 text-sm">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-600">
+          <Link to="/register" className="text-indigo-600">
             Register
           </Link>
         </p>

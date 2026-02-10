@@ -30,6 +30,10 @@ export default function Dashboard() {
       });
 
       const resumeText = uploadRes.data.text;
+const logout = () => {
+  localStorage.removeItem("token");
+  window.location.replace("/#/login");
+};
 
       // 2️⃣ Analyze ATS
       const aiRes = await API.post("/ai/analyze", {

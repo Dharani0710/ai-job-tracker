@@ -8,7 +8,11 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+      {/* Default route */}
+      <Route
+        path="/"
+        element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
+      />
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

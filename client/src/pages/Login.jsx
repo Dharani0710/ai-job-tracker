@@ -14,8 +14,8 @@ const handleSubmit = async (e) => {
     const res = await API.post("/auth/login", form);
     localStorage.setItem("token", res.data.token);
 
-    // ✅ HashRouter-safe redirect
-    window.location.href = "/#/dashboard";
+    // ✅ FORCE redirect (HashRouter safe)
+    window.location.replace("/#/dashboard");
   } catch (err) {
     alert(err.response?.data?.message || "Login failed");
   }

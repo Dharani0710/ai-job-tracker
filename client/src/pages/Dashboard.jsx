@@ -46,79 +46,123 @@ finally {
       setLoading(false);
     }
   };
+return (
+  <div className="min-h-screen bg-slate-100 p-4 md:p-8">
+    {/* Header */}
+    <div className="flex justify-between items-center mb-8">
+      <h1 className="text-2xl font-bold text-indigo-600">
+        AI Job Tracker
+      </h1>
+      <button
+        onClick={logout}
+        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+      >
+        Logout
+      </button>
+    </div>
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">AI Job Tracker</h1>
-        <button
-          onClick={logout}
-          className="bg-red-500 text-white px-3 py-1 rounded"
-        >
-          Logout
-        </button>
-      </div>
+    <div className="grid md:grid-cols-2 gap-6">
+      {/* LEFT: Upload Section */}
+      <div className="bg-white rounded-xl shadow p-6">
+        <h2 className="text-lg font-semibold mb-4">
+          Upload Resume & Job Description
+        </h2>
 
-      {/* Upload Section */}
-      <div className="bg-white p-4 rounded shadow mb-6">
-        <h2 className="font-semibold mb-3">Upload Resume (PDF)</h2>
+        <label className="block text-sm font-medium mb-1">
+          Resume (PDF)
+        </label>
         <input
           type="file"
           accept=".pdf"
           onChange={(e) => setResumeFile(e.target.files[0])}
-          className="mb-4"
+          className="w-full border rounded-lg p-2 mb-4"
         />
 
-        <h2 className="font-semibold mb-2">Paste Job Description</h2>
+        <label className="block text-sm font-medium mb-1">
+          Job Description
+        </label>
         <textarea
-          rows="5"
+          rows="6"
           value={jobDesc}
           onChange={(e) => setJobDesc(e.target.value)}
-          className="w-full border p-2 rounded mb-4"
+          className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-indigo-400 outline-none"
           placeholder="Paste job description here..."
         />
 
         <button
           onClick={handleUploadAndAnalyze}
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium"
         >
           {loading ? "Analyzing..." : "Analyze ATS"}
         </button>
       </div>
 
-      {/* Result Section */}
-      {result && (
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-semibold mb-2">ATS Result</h2>
+      {/* RIGHT: ATS RESULT */}
+      <div className="bg-white rounded-xl shadow p-6">
+        <h2 className="text-lg font-semibold mb-4">
+          ATS Analysis Result
+        </h2>
 
-          <p className="mb-2">
-            <strong>ATS Score:</strong>{" "}
-            <span className="text-blue-600 font-bold">
-              {result.atsScore}%
-            </span>
+        {!result && (
+          <p className="text-slate-500 text-sm">
+            Upload resume and job description to see results.
           </p>
+        )}
 
-          <div className="mb-3">
-            <strong>Missing Keywords:</strong>
-            <ul className="list-disc ml-6 text-sm text-gray-700">
-              {result.missingKeywords.map((k, i) => (
-                <li key={i}>{k}</li>
-              ))}
-            </ul>
-          </div>
+        {result && (
+          <>
+            {/* ATS SCORE */}
+            <div className="mb-6">
+              <div className="flex justify-between mb-1">
+                <span className="font-medium">ATS Score</span>
+                <span className="font-bold text-indigo-600">
+                  {result.atsScore}%
+                </span>
+              </div>
 
-          <div>
-            <strong>Tips:</strong>
-            <ul className="list-disc ml-6 text-sm text-gray-700">
-              {result.tips.map((t, i) => (
-                <li key={i}>{t}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+              <div className="w-full bg-slate-200 rounded-full h-3">
+                <div
+                  className="bg-indigo-600 h-3 rounded-full"
+                  style={{ width: `${result.atsScore}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* MISSING KEYWORDS */}
+            <div className="mb-4">
+              <h3 className="font-medium mb-2">Missing Keywords</h3>
+              {result.missingKeywords.length === 0 ? (
+                <p className="text-green-600 text-sm">
+                  🎉 No missing keywords
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {result.missingKeywords.map((k, i) => (
+                    <span
+                      key={i}
+                      className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs"
+                    >
+                      {k}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* TIPS */}
+            <div>
+              <h3 className="font-medium mb-2">Tips</h3>
+              <ul className="list-disc ml-5 text-sm text-slate-600 space-y-1">
+                {result.tips.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
+      </div>
     </div>
-  );
+  </div>
+);
 }

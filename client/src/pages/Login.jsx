@@ -13,13 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", form);
-
-      // ✅ SAVE TOKEN (THIS WAS MISSING / WRONG)
       localStorage.setItem("token", res.data.token);
-
-      console.log("TOKEN SAVED:", res.data.token);
-
-      // ✅ HashRouter-safe navigation
       navigate("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
@@ -27,42 +21,61 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow w-full max-w-sm"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          className="w-full border p-2 mb-3"
-          onChange={handleChange}
-          required
+    <div className="min-h-screen flex bg-gray-100">
+      {/* LEFT SIDE – IMAGE */}
+      <div className="hidden md:flex w-1/2 items-center justify-center bg-gray-100">
+        <img
+          src="/login-illustration.svg"
+          alt="Login Illustration"
+          className="w-3/4 max-w-md"
         />
+      </div>
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="w-full border p-2 mb-4"
-          onChange={handleChange}
-          required
-        />
+      {/* RIGHT SIDE – LOGIN CARD */}
+      <div className="flex w-full md:w-1/2 items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white w-full max-w-md p-8 rounded-xl shadow-lg"
+        >
+          <h2 className="text-2xl font-semibold mb-6">Login here</h2>
 
-        <button className="w-full bg-indigo-600 text-white p-2 rounded">
-          Login
-        </button>
+          <input
+            name="email"
+            type="email"
+            placeholder="Enter Email Address"
+            className="w-full border border-gray-300 px-4 py-3 mb-4 rounded focus:outline-none focus:ring-2 focus:ring-black"
+            onChange={handleChange}
+            required
+          />
 
-        <p className="text-center mt-3 text-sm">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-indigo-600">
-            Register
-          </Link>
-        </p>
-      </form>
+          <input
+            name="password"
+            type="password"
+            placeholder="Enter Password"
+            className="w-full border border-gray-300 px-4 py-3 mb-4 rounded focus:outline-none focus:ring-2 focus:ring-black"
+            onChange={handleChange}
+            required
+          />
+
+          <div className="flex items-center mb-6">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm text-gray-600">Remember Me</span>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
+          >
+            Login
+          </button>
+
+          <p className="text-center mt-6 text-sm">
+            <Link to="/register" className="text-blue-600 hover:underline">
+              Register here
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

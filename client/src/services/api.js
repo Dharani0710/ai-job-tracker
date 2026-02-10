@@ -6,9 +6,16 @@ const API = axios.create({
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
-  if (token) {
+
+  // ❌ do NOT send token for login & register
+  const isAuthRoute =
+    req.url.includes("/auth/login") ||
+    req.url.includes("/auth/register");
+
+  if (token && !isAuthRoute) {
     req.headers.Authorization = `Bearer ${token}`;
   }
+
   return req;
 });
 

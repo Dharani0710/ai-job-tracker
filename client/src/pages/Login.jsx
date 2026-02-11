@@ -4,19 +4,32 @@ import API from "../services/api";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading , setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+  setError(err.response?.data?.message || "Login failed");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+useEffect(() => {
+  if (localStorage.getItem("token")) {
+    navigate("/dashboard");
+  }
+}, []);
+
     try {
       const res = await API.post("/auth/login", form);
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,13 +74,18 @@ export default function Login() {
             <input type="checkbox" className="mr-2" />
             <span className="text-sm text-gray-600">Remember Me</span>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
+        
+        <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-indigo-600 text-white p-2 rounded"
           >
-            Login
-          </button>
+        {loading ? "Logging in..." : "Login"}
+        </button>
+{error && (
+  <p className="text-red-500 text-sm mt-2">{error}</p>
+)}
+
 
           <p className="text-center mt-6 text-sm">
             <Link to="/register" className="text-blue-600 hover:underline">

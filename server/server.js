@@ -6,20 +6,28 @@ const userRoutes = require("./routes/userRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 const aiRoutes = require("./routes/aiRoutes");
-
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
 const app = express();
 
-// middleware
-app.use(cors());
+// middlewareapp.use(
+  app.use(
+  cors({
+    origin: "http://localhost:5173",   // for local dev
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
+
 app.use("/api/auth",authRouter);
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/ai", aiRoutes);
+
 
 
 // test route

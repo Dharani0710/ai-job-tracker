@@ -13,7 +13,7 @@ exports.createJob = async (req, res) => {
       company,
       role,
       jobDescription,
-      userId: req.userId,
+      userId: req.user.userId,  // ✅ FIXED
     });
 
     res.status(201).json(job);
@@ -25,9 +25,9 @@ exports.createJob = async (req, res) => {
 // GET USER JOBS
 exports.getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ userId: req.userId }).sort({
-      createdAt: -1,
-    });
+    const jobs = await Job.find({
+      userId: req.user.userId,   // ✅ FIXED
+    }).sort({ createdAt: -1 });
 
     res.json(jobs);
   } catch (error) {
@@ -40,7 +40,7 @@ exports.updateJob = async (req, res) => {
   try {
     const job = await Job.findOne({
       _id: req.params.id,
-      userId: req.userId,
+      userId: req.user.userId,  // ✅ FIXED
     });
 
     if (!job) {
@@ -56,12 +56,12 @@ exports.updateJob = async (req, res) => {
   }
 };
 
-// DELETE JOB  ✅ IMPORTANT
+// DELETE JOB
 exports.deleteJob = async (req, res) => {
   try {
     const job = await Job.findOneAndDelete({
       _id: req.params.id,
-      userId: req.userId,
+      userId: req.user.userId,  // ✅ FIXED
     });
 
     if (!job) {
@@ -74,14 +74,14 @@ exports.deleteJob = async (req, res) => {
   }
 };
 
-// SAVE ATS RESULT TO JOB
+// SAVE ATS RESULT
 exports.saveATSResult = async (req, res) => {
   try {
     const { atsScore, missingKeywords } = req.body;
 
     const job = await Job.findOne({
       _id: req.params.id,
-      userId: req.userId,
+      userId: req.user.userId,  // ✅ FIXED
     });
 
     if (!job) {
